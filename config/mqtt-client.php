@@ -65,7 +65,11 @@ return [
             // Additional settings used for the connection to the broker.
             // All of these settings are entirely optional and have sane defaul>
             'connection_settings' => [
+<<<<<<< HEAD
+                // The TLS settings used for the connection. Must match the specified port.
+=======
                 // The TLS settings used for the connection. Must match the spe>
+>>>>>>> remotes/origin/HEAD
                 'tls' => [
                     'enabled' => env('MQTT_TLS_ENABLED', false),
                     'allow_self_signed_certificate' => env('MQTT_TLS_ALLOW_SELF>
