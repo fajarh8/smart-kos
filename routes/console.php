@@ -8,9 +8,6 @@ use Illuminate\Support\Facades\Schedule;
 //     $this->comment(Inspiring::quote());
 // })->purpose('Display an inspiring quote')->hourly();
 
-Schedule::command('serve')->everyTenSeconds()->withoutOverlapping()->runInBackground();
-Schedule::exec('npm run dev')->everyTenSeconds()->withoutOverlapping()->runInBackground();
-Schedule::command('queue:work')->everyTenSeconds()->withoutOverlapping()->runInBackground();
-Schedule::command('reverb:start')->everyTenSeconds()->withoutOverlapping()->runInBackground();
-Schedule::command('mqtt:subscribe')->everyTenSeconds()->withoutOverlapping()->runInBackground();
-// Schedule::command('schedule:work')->everySecond()->withoutOverlapping()->runInBackground();
+Schedule::command('queue:work')->withoutOverlapping()->runInBackground();
+Schedule::command('reverb:start')->withoutOverlapping()->runInBackground();
+Schedule::command('mqtt:subscribe')->withoutOverlapping()->runInBackground();

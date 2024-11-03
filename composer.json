@@ -8,11 +8,12 @@
         "php": "^8.2",
         "laravel/framework": "^11.0",
         "laravel/prompts": "^0.1.21",
-        "laravel/reverb": "@beta",
+        "laravel/reverb": "^1.1",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.4",
-        "php-mqtt/laravel-client": "^1.5"
+        "php-mqtt/laravel-client": "^1.5",
+        "react/promise": "^2.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -37,11 +38,12 @@
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+	    "@php artisan vendor:publish --force --tag=livewire:assets --ansi"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
-        ],
+	],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],

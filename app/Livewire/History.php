@@ -8,6 +8,7 @@ use App\Models\Room;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+//use App\Events\PowerIsOver;
 
 class History extends Component
 {
@@ -39,6 +40,7 @@ class History extends Component
         $mode;
     public function render()
     {
+	//PowerIsOver::dispatch(1);
         $this->userId = Auth::user()->id;
         // $this->roomId = Room::where('userId', $this->userId)->value('id');
         date_default_timezone_set('Asia/Jakarta');

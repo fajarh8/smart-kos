@@ -34,7 +34,7 @@ return [
         'private' => [
 
             // The host and port to which the client shall connect.
-            'host' => '192.168.137.1',
+            'host' => '145.223.21.10',
             'port' => 1883,
 
             // The MQTT protocol version used for the connection.

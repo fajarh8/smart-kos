@@ -37,18 +37,21 @@ class MqttSubscribe extends Command
 
         // Relay
         if($topic == 'iotsmartkos/relay'){
+	    echo 'Relay Topic'; 
             $deviceId = IotDevice::where('token', $jsonDoc['token'])->value('id');
-            if($jsonDoc['overPower'] == 1){
-                PowerIsOver::dispatch($deviceId);
+	    if($jsonDoc['overPower'] == 1){
+             	echo 'overPower';
+		PowerIsOver::dispatch($deviceId);
                 $relayUpdate = Relay::where('deviceId', $deviceId)->update([
                     'status' => false,
                     'turnedOff' => true,
                     'turnedOn' => false,
                 ]);
                 if(!$relayUpdate){
-                    echo "Overpower Error";
+                    echo 'Overpower Error';
                 }
             } else{
+		echo 'editrelay';
                 if(isset($jsonDoc['token']) && isset($jsonDoc['relayNumber'])){
                     RelayStatusUpdated::dispatch($deviceId, $jsonDoc['relayNumber'], $jsonDoc['status']);
                     if(!$deviceId){
@@ -60,6 +63,7 @@ class MqttSubscribe extends Command
                             echo 'Relay not found';
                             echo PHP_EOL;
                         } else{
+				echo 'Updating relay';
                             if(isset($jsonDoc['status'])){
                                 Relay::where('id', $relayId)->update(['status' => $jsonDoc['status']]);
                             }
@@ -148,9 +152,10 @@ class MqttSubscribe extends Command
                             // RoomBill::where([['userId', $userId], ['roomId', $roomId]])->update(['bill' => $roomBill]);
                         }
                     } else{
+			echo "sensor";
                         SensorDataUpdated::dispatch($deviceId, $jsonDoc['category'], $jsonDoc['value']);
                         $updateSensor = SensorData::where([['deviceId', $deviceId], ['category', $jsonDoc['category']]])->value('data');
-                        // echo "data = " .$updateSensor;
+                        echo "data = " .$updateSensor;
                         if($updateSensor === null){
                             SensorData::create([
                                 'deviceId' => $deviceId,
@@ -159,6 +164,7 @@ class MqttSubscribe extends Command
                             ]);
                         } else{
                             SensorData::where([['deviceId', $deviceId], ['category', $jsonDoc['category']]])->update(['data' => $jsonDoc['value']]);
+				echo "sukses";
                         }
                     }
                 }

@@ -22,7 +22,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/dashboard/admin/kos', [KosController::class, 'index'])->middleware('role:admin')->name('admin.kos');
     Route::get('/dashboard/admin/tagihan', [KosController::class, 'electricBill'])->middleware('role:admin')->name('admin.listrik');
     Route::get('/dashboard/admin/profile', [KosController::class, 'profile'])->middleware('role:admin')->name('admin.profil');
-    Route::get('/dashboard/admin/request', [KosController::class, 'userRequest'])->middleware('role:admin')->name('admin.listrik');
+    Route::get('/dashboard/admin/request', [KosController::class, 'userRequest'])->middleware('role:admin')->name('admin.request');
     Route::post('/dashboard/admin/kos', [KosController::class, 'store'])->middleware('role:admin')->name('admin.kos.store');
     Route::put('/dashboard/admin/kos/{id}', [KosController::class, 'update'])->middleware('role:admin')->name('admin.kos.update');
     Route::delete('/dashboard/admin/kos/{id}', [KosController::class, 'destroy'])->middleware('role:admin')->name('admin.kos.destroy');

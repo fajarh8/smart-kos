@@ -54,18 +54,21 @@ class ElectricBill extends Component
                 ];
             }
         }
-
-        switch($this->roomData[0][0]['timezone']){
-            case 7:
-                $timezone = 'Asia/Jakarta';
-                break;
-            case 8:
-                $timezone = 'Asia/Makassar';
-                break;
-            case 9:
-                $timezone = 'Asia/Jayapura';
-                break;
-        }
+	if($this->roomData){
+        	switch($this->roomData[0][0]['timezone']){
+            	    case 7:
+                	$timezone = 'Asia/Jakarta';
+                	break;
+            	    case 8:
+                	$timezone = 'Asia/Makassar';
+                	break;
+            	    case 9:
+                	$timezone = 'Asia/Jayapura';
+                	break;
+        	}
+	}else{
+		$timezone = 'Asia/Jakarta';
+	}
         date_default_timezone_set($timezone);
 
         return view('livewire.electric-bill');

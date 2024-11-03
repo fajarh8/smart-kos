@@ -21,5 +21,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrapFive();
+	//Livewire::setScriptRoute(function ($handle) {
+        //    return Route::get('/assets/livewire/livewire.js', $handle);
+        //}); 
     }
 }

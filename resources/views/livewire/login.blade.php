@@ -25,22 +25,22 @@
         @csrf
         @if ($create == true)
             <div class="mb-3">
-                <label for="email" class="form-label">Nama</label>
-                <input type="name" wire:model="name" name="name" class="form-control">
+                <label for="name" class="form-label">Nama</label>
+                <input id="name" title="Nama" type="name" wire:model="name" name="name" class="form-control">
             </div>
         @endif
         <div class="mb-3">
             <label for="email" class="form-label">Email</label>
-            <input type="email" wire:model="email" name="email" class="form-control">
+            <input id="email" title="Email" type="email" wire:model="email" name="email" class="form-control">
         </div>
         <div class="mb-3">
             <label for="password" class="form-label">Password</label>
-            <input type="password" wire:model="password" name="password" class="form-control">
+            <input id="password" title="Password" type="password" wire:model="password" name="password" class="form-control">
         </div>
         @if ($create == true)
             <div class="mb-3">
                 <label for="password_confirmation" class="form-label">Konfirmasi password</label>
-                <input type="password" wire:model="password_confirmation" name="password_confirmation" class="form-control">
+                <input id="password_confirmation" title="Konfirmasi Password" type="password" wire:model="password_confirmation" name="password_confirmation" class="form-control">
             </div>
             {{-- <div class="mb-3">
                 <label for="passwordConfirm" class="form-label">Konfirmasi password</label>
