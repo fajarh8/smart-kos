@@ -302,7 +302,7 @@ class Kos extends Component
 
     public function donwloadSketch(){
         // Storage::disk('local')->put('example.txt', 'Contents');
-        $path = Storage::path('body.cpp');
+        $path = Storage::path('body.ino');
         // dd($path);
         $body = File::get($path);
 
@@ -314,15 +314,15 @@ class Kos extends Component
 
         // dd($writeToken, $writeMqtt);
 
-        Storage::copy('head.cpp', 'public\complete-'.$this->roomId.'.cpp');
-        Storage::append('public\complete-'.$this->roomId.'.cpp', $wifiSsid);
-        Storage::append('public\complete-'.$this->roomId.'.cpp', $wifiPass);
-        Storage::append('public\complete-'.$this->roomId.'.cpp', $writeToken);
-        Storage::append('public\complete-'.$this->roomId.'.cpp', $body);
+        Storage::copy('head.ino', 'public\complete-'.$this->roomId.'.ino');
+        Storage::append('public\complete-'.$this->roomId.'.ino', $wifiSsid);
+        Storage::append('public\complete-'.$this->roomId.'.ino', $wifiPass);
+        Storage::append('public\complete-'.$this->roomId.'.ino', $writeToken);
+        Storage::append('public\complete-'.$this->roomId.'.ino', $body);
 
-        // Storage::delete('public\complete-'.$this->roomId.'.cpp');
+        // Storage::delete('public\complete-'.$this->roomId.'.ino');
 
-        return Storage::download('public\complete-'.$this->roomId.'.cpp', 'sketch.cpp');
+        return Storage::download('public\complete-'.$this->roomId.'.ino', 'sketch.ino');
     }
 
     public function deleteUser(){
