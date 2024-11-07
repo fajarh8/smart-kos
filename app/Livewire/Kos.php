@@ -303,9 +303,9 @@ class Kos extends Component
     public function donwloadSketch(){
         // Storage::disk('local')->put('example.txt', 'Contents');
         $path = Storage::path('body.ino');
-        // dd($path);
+        //dd($path);
         $body = File::get($path);
-
+	//dd("sukses");
         $token = IotDevice::where('roomId', $this->roomId)->value('token');
         $writeToken = 'const char token[] PROGMEM = "' .$token. '";';
 
