@@ -1,4 +1,4 @@
-const char mqttServer[] PROGMEM = "smart-kos.site";
+const char mqttServer[] PROGMEM = "145.223.21.10";
 
 DHT dht(DHT_PIN, DHT11);
 TaskHandle_t fastTrackTask;
@@ -59,7 +59,7 @@ void setPir(byte hour, byte minute){
 }
 
 void sendRelayData(byte relayNumber, bool overPower){
-    JsonDocument relayDoc;
+  JsonDocument relayDoc;
 	relayDoc["token"] = token;
 	if(overPower == 0){
 		relayDoc["relayNumber"] = relayNumber + 1;
@@ -75,35 +75,35 @@ void sendRelayData(byte relayNumber, bool overPower){
 	size_t relaySize = serializeJson(relayDoc, relayJson);
 	Serial.println(relayJson);
 
-    const char relayTopic[] PROGMEM = "iotsmartkos/relay";
-    client.publish(relayTopic, relayJson, relaySize);
+  const char relayTopic[] PROGMEM = "iotsmartkos/relay";
+  client.publish(relayTopic, relayJson, relaySize);
     
-    Serial.print("Relay ");
-    Serial.print(relayNumber + 1);
-    Serial.println(F(" Sent"));
+  Serial.print("Relay ");
+  Serial.print(relayNumber + 1);
+  Serial.println(F(" Sent"));
 }
 
 void postData(String category, float sendData){
-    JsonDocument sensorDoc;
+  JsonDocument sensorDoc;
     
 	sensorDoc["token"] = token;
 	sensorDoc["category"] = category;
 	sensorDoc["value"] = sendData;
-    if(category == "pzem-energy"){
+  if(category == "pzem-energy"){
 		struct tm timeinfo;
-        getLocalTime(&timeinfo);
-	    sensorDoc["day"] = timeinfo.tm_mday;
-        sensorDoc["month"] = (timeinfo.tm_mon + 1);
-        sensorDoc["year"] = (1900 + timeinfo.tm_year);
-        sensorDoc["hour"] = timeinfo.tm_hour;
-    }
+    getLocalTime(&timeinfo);
+	  sensorDoc["day"] = timeinfo.tm_mday;
+    sensorDoc["month"] = (timeinfo.tm_mon + 1);
+    sensorDoc["year"] = (1900 + timeinfo.tm_year);
+    sensorDoc["hour"] = timeinfo.tm_hour;
+  }
 
 	char sensorJson[150];
 	size_t n = serializeJson(sensorDoc, sensorJson);
 	Serial.println(sensorJson);
 
-    const char sensorTopic[] PROGMEM = "iotsmartkos/sensor";
-    client.publish(sensorTopic, sensorJson, n);
+  const char sensorTopic[] PROGMEM = "iotsmartkos/sensor";
+  client.publish(sensorTopic, sensorJson, n);
 	// client.loop();
 
 	Serial.print(category);
@@ -111,6 +111,8 @@ void postData(String category, float sendData){
 }
 
 void getRelayData(){
+  WiFiClientSecure *client = new WiFiClientSecure;
+  client->setInsecure();
 	settingUp = 1;
 	HTTPClient initialHttp;
 	
@@ -127,14 +129,14 @@ void getRelayData(){
 		const char relayHttp[] PROGMEM = "https://smart-kos.site/api/getrelaydata";
 		const char contentType[] PROGMEM = "Content-Type";
 		const char jsonHeader[] PROGMEM = "application/json";
-		initialHttp.begin(wifiClient, relayHttp);
+		initialHttp.begin(*client, relayHttp);
 		initialHttp.addHeader(contentType, jsonHeader);
 
 		responseCode = initialHttp.POST(initialData);
 		Serial.println(responseCode);
 	}
 
-    JsonDocument initialResponse;
+  JsonDocument initialResponse;
 	DeserializationError error = deserializeJson(initialResponse, initialHttp.getString());
 	if (error) {
 		Serial.print(F("deserializeJson() failed: "));
@@ -142,7 +144,7 @@ void getRelayData(){
 		return;
 	}
 
-    timezone = initialResponse["timezone"].as<byte>();
+  timezone = initialResponse["timezone"].as<byte>();
 	lastMonth = initialResponse["lastMonth"].as<byte>();
 	int lastYear = initialResponse["lastYear"].as<int>();
 	int lastDay = initialResponse["lastDay"].as<int>();
@@ -170,11 +172,11 @@ void getRelayData(){
 			initialResponse["offMinute"][i].as<byte>(),
 			initialResponse["threshold"][i].as<byte>(),
 		};
-        digitalWrite(RELAY_PIN[i], relays[i].status);
-        delay(500);
+    digitalWrite(RELAY_PIN[i], relays[i].status);
+    delay(500);
 	}
 
-    Serial.println(F("DIGITAL WRITE SUCCESS"));
+  Serial.println(F("DIGITAL WRITE SUCCESS"));
 	configTime(timezone*3600, 0, ntpServer1);
 	struct tm timeinfo;
 	getLocalTime(&timeinfo);
@@ -230,7 +232,7 @@ void setTimeBased(byte hour, byte minute){
 					relays[i].status = 0;
 					digitalWrite(RELAY_PIN[i], relays[i].status);
 					Serial.println(F("Time OFF"));
-			        sendRelayData(i, false);
+			    sendRelayData(i, false);
 				}
 			}
 		}
@@ -298,7 +300,7 @@ void setLamp(byte ldrRead){
 						relays[i].status = 0;
 						digitalWrite(RELAY_PIN[i], relays[i].status);
 						Serial.println(F("Lampu OFF"));
-					    sendRelayData(i, false);
+					  sendRelayData(i, false);
 					}
 				}
 			} else{
@@ -306,7 +308,7 @@ void setLamp(byte ldrRead){
 					if(relays[i].turnedOn != 0){
 						relays[i].turnedOn = 0;
 						Serial.println(F("lamp turnedOn = 0"));
-				        sendRelayData(i, false);
+				    sendRelayData(i, false);
 					}
 					if(pirStatus == 1){
 						if((relays[i].pirAuto == 1 && pirValue != 0) || (relays[i].pirAuto == 0)){
@@ -340,32 +342,32 @@ void callback(char* topic, byte* payload, unsigned int length) {
 	// 4 = Pir automation,
 	// 5 = Max Power,
 
-    Serial.print("Callback Core: ");
-    Serial.println(xPortGetCoreID());
+  Serial.print("Callback Core: ");
+  Serial.println(xPortGetCoreID());
     
-    JsonDocument messageJson;
-    deserializeJson(messageJson, payload, length);
+  JsonDocument messageJson;
+  deserializeJson(messageJson, payload, length);
 
-    byte channel = messageJson["channel"].as<byte>();
+  byte channel = messageJson["channel"].as<byte>();
 	byte relayNumber;
 	if(channel == 1){
 		relayNumber = (messageJson["number"].as<byte>() - 1);
-        relays[relayNumber].status = messageJson["status"].as<bool>();
-        relays[relayNumber].automation = messageJson["automation"].as<bool>();
-        relays[relayNumber].turnedOn = messageJson["turnedOn"].as<bool>();
-        relays[relayNumber].turnedOff = messageJson["turnedOff"].as<bool>();
+    relays[relayNumber].status = messageJson["status"].as<bool>();
+    relays[relayNumber].automation = messageJson["automation"].as<bool>();
+    relays[relayNumber].turnedOn = messageJson["turnedOn"].as<bool>();
+    relays[relayNumber].turnedOff = messageJson["turnedOff"].as<bool>();
 
-        digitalWrite(RELAY_PIN[relayNumber], relays[relayNumber].status);
+    digitalWrite(RELAY_PIN[relayNumber], relays[relayNumber].status);
 	} else if(channel == 2){
 		relayNumber = (messageJson["number"].as<byte>() - 1);
-        relays[relayNumber].category = messageJson["category"].as<byte>();
+      relays[relayNumber].category = messageJson["category"].as<byte>();
 		if(relays[relayNumber].category == 1){ // Time
-	        relays[relayNumber].onHour = messageJson["onHour"].as<byte>();
-	        relays[relayNumber].onMinute = messageJson["onMin"].as<byte>();
-	        relays[relayNumber].offHour = messageJson["offHour"].as<byte>();
-	        relays[relayNumber].offMinute = messageJson["offMin"].as<byte>();
+	    relays[relayNumber].onHour = messageJson["onHour"].as<byte>();
+	    relays[relayNumber].onMinute = messageJson["onMin"].as<byte>();
+	    relays[relayNumber].offHour = messageJson["offHour"].as<byte>();
+	    relays[relayNumber].offMinute = messageJson["offMin"].as<byte>();
 		} else if(relays[relayNumber].category == 2 || relays[relayNumber].category == 3){ // Suhu
-	        relays[relayNumber].threshold = messageJson["threshold"].as<byte>();
+	    relays[relayNumber].threshold = messageJson["threshold"].as<byte>();
 			if(relays[relayNumber].category == 2){
 				DHT dht(DHT_PIN, DHT11);
 				byte temperatureRead = dht.readTemperature();
@@ -393,7 +395,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 		pirOff[1] = messageJson["offMin"].as<byte>();
 		
 		struct tm timeinfo;
-        getLocalTime(&timeinfo);
+    getLocalTime(&timeinfo);
 		setPir(timeinfo.tm_hour, timeinfo.tm_min);
 		pirMinutes = ((timeinfo.tm_min + pirInterval + 1) % 60);
 	} else if(channel == 5){
@@ -409,24 +411,24 @@ void callback(char* topic, byte* payload, unsigned int length) {
 }
 
 void reconnect() {
-    client.setServer(mqttServer, 1883);
-    Serial.print("Connecting MQTT...");
-    while (!client.connected()) {
-        if (client.connect(token)) {
-            client.subscribe(token, 1);
-            client.setCallback(callback);
+  client.setServer(mqttServer, 1883);
+  Serial.print("Connecting MQTT...");
+  while (!client.connected()) {
+    if (client.connect(token)) {
+      client.subscribe(token, 1);
+      client.setCallback(callback);
             
-            Serial.println(F("connected"));
-            Serial.print("clientId: ");
-            Serial.println(token);
-			client.loop();
-        } else {
-            Serial.print("failed, rc = ");
-            Serial.print(client.state());
-            Serial.println(F(" try again in 5 seconds"));
-            delay(5000);
-        }
+      Serial.println(F("connected"));
+      Serial.print("clientId: ");
+      Serial.println(token);
+		  client.loop();
+    } else {
+      Serial.print("failed, rc = ");
+      Serial.print(client.state());
+      Serial.println(F(" try again in 5 seconds"));
+      delay(5000);
     }
+  }
 }
 
 void fastTrack(void* pvParameters){ 
