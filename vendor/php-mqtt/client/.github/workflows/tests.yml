@@ -15,10 +15,10 @@ jobs:
 
     strategy:
       matrix:
-        php-version: ['8.0', '8.1', '8.2', '8.3']
+        php-version: ['8.1', '8.2', '8.3', '8.4']
         mqtt-broker: ['mosquitto-1.6', 'mosquitto-2.0', 'hivemq', 'emqx', 'rabbitmq']
         include:
-          - php-version: '8.3'
+          - php-version: '8.4'
             mqtt-broker: 'mosquitto-2.0'
             run-sonarqube-analysis: true
 
@@ -133,7 +133,7 @@ jobs:
           sed -i "s|$GITHUB_WORKSPACE|/github/workspace|g" phpunit.report-junit.xml
 
       - name: Run SonarQube analysis
-        uses: sonarsource/sonarcloud-github-action@v2.1.0
+        uses: sonarsource/sonarcloud-github-action@v3.1.0
         if: matrix.run-sonarqube-analysis
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
