@@ -92,15 +92,19 @@
                                         Kamar
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right">
-                                        @foreach ($roomData[$kos] as $room => $data)
-                                            <button wire:click="getRoom({{$data['id']}}, true, {{$value['id']}})" type="button" class="dropdown-item">
-                                                @if ($data['userId'] !== null)
-                                                    {{$data['name'] ." (". $data['userName'] .")"}}
-                                                @else
-                                                    {{$data['name'] ." (Kosong)"}}
-                                                @endif
-                                            </button>
-                                        @endforeach
+                                        @if(array_key_exists($kos, $kosData))
+                                            @foreach ($roomData[$kos] as $room => $data)
+                                                <button wire:click="getRoom({{$data['id']}}, true, {{$value['id']}})" type="button" class="dropdown-item">
+                                                    @if ($data['userId'] !== null)
+                                                        {{$data['name'] ." (". $data['userName'] .")"}}
+                                                    @else
+                                                        {{$data['name'] ." (Kosong)"}}
+                                                    @endif
+                                                </button>
+                                            @endforeach
+                                        @else
+                                            Belum ada kamar
+                                        @endif
                                         {{-- @foreach ($roomName[$kos] as $room => $name)
                                             <button wire:click="getRoom({{$room}}, true, {{$kos}})" type="button" class="dropdown-item">
                                                 @if ($currentUser[$kos][$room] !== null)
